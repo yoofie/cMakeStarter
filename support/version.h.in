@@ -1,0 +1,46 @@
+/* **************************************
+	File Name: Generated version Info
+	Created: Saturday April 01 2023
+*************************************** */
+#ifndef _VERSION_INFO_H_
+#define _VERSION_INFO_H_
+
+/* **************************************
+	#defines
+*************************************** */
+
+
+/* **************************************
+	Declarations
+*************************************** */
+#define GIT_BUILD_VERSION ${GIT_BUILD_VERSION}
+#define GIT_BUILD_VERSION_TAG "${GIT_BUILD_VERSION_TAG}"
+
+#define RELEASE_VERSION "${RELEASE}"
+#define MAJOR_VERSION "${MAJOR}"
+#define MINOR_VERSION "${MINOR}"
+#define PATCH_VERSION "${PATCH}"
+#define REVISION "${REVISION}"
+
+#define ARCH ${CMAKE_SYSTEM}
+#define COMP ${CMAKE_SYSTEM_PROCESSOR}
+#define BUILD ${CMAKE_BUILD_TYPE} 
+// Add more of your stuff here
+#define APP_BUILD_WITH_CMAKE_VERSION "${CMAKE_VERSION}"
+#define COMPILER "${CMAKE_CXX_COMPILER_ID}"
+#define CMAKE_COMPILER_VERSION "${CMAKE_CXX_COMPILER_VERSION}"
+#define APP_BUILD_ON_PLATFORM "${CMAKE_SYSTEM}"
+
+#define ROOT "${PROJECT_SOURCE_DIR}"
+#define APP_NAME "@PROJECT_NAME@"
+/* ********************************************************
+
+	CMAKE_CXX_FLAGS_DEBUG = ${CMAKE_CXX_FLAGS_DEBUG}
+	CMAKE_CXX_FLAGS_RELEASE = ${CMAKE_CXX_FLAGS_RELEASE}
+******************************************************** */
+/* **************************************
+	Extras
+*************************************** */
+
+
+#endif
