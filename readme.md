@@ -18,6 +18,7 @@ powershell .\support\install_deps.ps1
 ```
 Once cMake, Just & Ninja is installed and they are in your `$PATH` environment vars, you can run the rest
 ```
+dev.bat
 just vswhere
 just build
 ```
