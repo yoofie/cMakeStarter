@@ -6,23 +6,19 @@
 		{
 			"label": "Build",
 			"type": "shell",
-			"command": "E:/Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe --build ${workspaceFolder}/build --config Debug --target ALL_BUILD -j 26",
+			"command": "just build",
 			"problemMatcher": [],
-			"group": "build"
-		},
-		{
-			"type": "cmake",
-			"label": "CMake: build",
-			"command": "build",
-			"targets": [
-				"ALL_BUILD"
-			],
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			},
+		},
+		{
+			"label": "Clean Project",
+			"type": "shell",
+			"command": "just clean",
 			"problemMatcher": [],
-			"detail": "CMake template build task"
-		}
+		},
+		
 	]
 }
