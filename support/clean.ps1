@@ -1,6 +1,6 @@
 # Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 # Set-ExecutionPolicy -Scope CurrentUser
-$Directories = "bin", "build", "support/psClang", "psClang", "CMakeFiles", "CMakeCache.txt", "ninja.log", "cmake_install.cmake", ".ninja_log", ".ninja_deps", ".cache", "lib\Release", "lib\Debug","build.ninja", "build-Debug.ninja", "build-Release.ninja", "build-RelWithDebInfo.ninja"
+$Directories = "bin", "build", "support/psClang", "psClang", "CMakeFiles", "CMakeCache.txt", "ninja.log", "cmake_install.cmake", ".ninja_log", ".ninja_deps", ".cache", "lib/Release", "lib/Debug", "lib/RelWithDebInfo", "build.ninja", "build-Debug.ninja", "build-Release.ninja", "build-RelWithDebInfo.ninja"
  
 #Delete files in each directory
 ForEach ($Dir in $Directories) {
