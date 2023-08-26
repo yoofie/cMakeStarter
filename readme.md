@@ -1,4 +1,4 @@
-# SDL2 + cMake Starter Proj Template
+# cMake Starter Proj Template
 Just my own template project for Windows systems using some common useful libraries.
 
 # Build requirements
