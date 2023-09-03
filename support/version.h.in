@@ -13,6 +13,7 @@
 /* **************************************
 	Declarations
 *************************************** */
+#define APP_NAME "@PROJECT_NAME@"
 #define GIT_BUILD_VERSION ${GIT_BUILD_VERSION}
 #define GIT_BUILD_VERSION_TAG "${GIT_BUILD_VERSION_TAG}"
 
@@ -32,7 +33,6 @@
 #define APP_BUILD_ON_PLATFORM "${CMAKE_SYSTEM}"
 
 #define ROOT "${PROJECT_SOURCE_DIR}"
-#define APP_NAME "@PROJECT_NAME@"
 /* ********************************************************
 
 	CMAKE_CXX_FLAGS_DEBUG = ${CMAKE_CXX_FLAGS_DEBUG}
