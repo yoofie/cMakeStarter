@@ -8,6 +8,8 @@
 #include "fmt/bundled/format.h"
 #include "result.h"
 
+#include "ring.hpp"
+#include "ring_span.hpp"
 #include "sqlite3.h"
 #include "version.h"
 #include <filesystem>
@@ -38,6 +40,35 @@ int main(int argc, char **) {
 
 	auto task1 = async::spawn(custom_pool, [] {
 		std::this_thread::sleep_for(200ms);
+
+		std::vector<uint32_t> v(3);
+		nonstd::ring_span<uint32_t> ring(v.begin(), v.end());
+		nonstd::ring<std::vector<uint32_t>> ring2(4);
+		// nonstd::ring_span<uint32_t> rr(std::move(v));
+
+		ring.push_back(1);
+		ring.push_back(2);
+		ring.push_back(3);
+		ring.push_back(4);
+
+		ring2.push_back(1);
+		ring2.push_back(2);
+		ring2.push_back(3);
+		ring2.push_back(4);
+		ring2.push_back(5);
+
+		auto front = ring2.front();
+		auto back = ring2.back();
+
+		auto kk = ring2[3];
+
+		auto &another = ring2;
+		another.push_back(10);
+
+		for (auto &i : ring) {
+			std::cout << std::to_string(i) << "\n";
+		}
+
 		std::cout << "Task #1 executes asynchronously\n";
 	});
 	auto task2 = async::spawn(custom_pool, [] {

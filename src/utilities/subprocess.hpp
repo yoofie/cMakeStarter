@@ -1428,7 +1428,7 @@ inline int Popen::wait() noexcept(false)
 
 inline int Popen::poll() noexcept(false)
 {
-  int status;
+  //int status;
 
 #ifndef _MSC_VER
   if (!child_created_) return -1; // TODO: ??
