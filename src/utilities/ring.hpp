@@ -12,7 +12,7 @@
 #ifndef NONSTD_RING_LITE_HPP
 #define NONSTD_RING_LITE_HPP
 
-#include <ring_span.hpp>
+#include "ring_span.hpp"
 
 namespace nonstd {
 
