@@ -65,16 +65,11 @@ function exportCodeOnly([string]$name) {
 	# Ensure neccessary files/folders are present
 	ForEach ($item in $archiveList) {
 		
-		If (Test-Path $item) {
-			# Write-host "'$item'" -f Yellow -NoNewline
-			# Write-host " present" -f Green
-		}
-		Else {
+		If (!(Test-Path $item)) {
 			Write-host "'$item'" -f Yellow -NoNewline
 			Write-host " is missing!" -f Red
 			$missingItem = $item
 			$all_files_present = false
-			#break
 		}
 	}
 	If ($all_files_present) {
@@ -103,11 +98,7 @@ function exportAll() {
 
 	# Ensure neccessary files/folders are present
 	ForEach ($item in $archiveList) {
-		If (Test-Path $item) {
-			# Write-host "'$item'" -f Yellow -NoNewline
-			# Write-host " present" -f Green
-		}
-		Else {
+		If (!(Test-Path $item)) {
 			Write-host "'$item'" -f Yellow -NoNewline
 			Write-host " is missing!" -f Red
 			$missingItem = $item
@@ -138,8 +129,7 @@ function windowsTerminal() {
 function vsWhere() {
 	$vswhereLatest = "https://github.com/Microsoft/vswhere/releases/latest/download/vswhere.exe"
 	$vswherePath = ".\support\vswhere.exe"
-	If (Test-Path $vswherePath) {
-		# Write-host "'$item'" -f Yellow -NoNewline
+	If (!(Test-Path $vswherePath)) {
 		Write-host "vswhere.exe not found" -f Red
 		Write-host "downloading vswhere.exe..." -f Green
 		invoke-webrequest $vswhereLatest -OutFile $vswherePath
