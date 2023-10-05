@@ -1,25 +1,25 @@
 
-function generate_ninja_makefiles(){
-	Write-host "`n`nGenerating Ninja build files..." -f Blue
+function generate_ninja_makefiles() {
+	Write-host "Generating Ninja build files..." -f Blue
 	$Env:PATH += ";$pwd"
 	$Env:PATH += ";$pwd/support"
 	# cmake -DCMAKE_TOOLCHAIN_FILE="./support/toolchain/tc39xx-tasking.cmake" -G "Ninja Multi-Config" .
-	$cmd = ("cmake -DCMAKE_TOOLCHAIN_FILE=`"./support/toolchain/tc39xx-tasking.cmake`" -G `"Ninja Multi-Config`" .")
+	$cmd = ("cmake -G `"Ninja Multi-Config`" .")
 	# Write-Host "cmd:" $cmd
 	# Write-Host "Env:PATH:" $Env:PATH
 	Invoke-Expression "& $cmd | out-null"
-	Write-host "Done!`n" -f Green
+	Write-host "Generated Ninja build files" -f Green
 }
 
-function fmt(){
+function fmt() {
 	Write-host "`n`nRunning code formatter..." -f Blue
-	# Write-Host "InvocationName:" $MyInvocation.InvocationName -f Yellow
-	# Write-Host "Script:" $PSCommandPath -f Yellow
-	# Write-Host "Path:" $PSScriptRoot -f Yellow
-	# Write-Host "Path:" $pwd -f Yellow
+	Write-Host "InvocationName:" $MyInvocation.InvocationName -f Yellow
+	Write-Host "Script:" $PSCommandPath -f Yellow
+	Write-Host "Path:" $PSScriptRoot -f Yellow
+	Write-Host "PWD:" $pwd -f Yellow
 	$Env:PATH += ";$pwd"
 	$Env:PATH += ";$pwd/support"
-	$cmd = (($PSScriptRoot) + "\clang-format-all.ps1 -RepoRoot 'src' -Include '*.h', '*.c' -Exclude '*.g.*'")
+	$cmd = (($PSScriptRoot) + "\clang-format-all.ps1 -RepoRoot 'src' -Include '*.h', '*.hpp', '*.cpp' -Exclude '*.g.*'")
 	Invoke-Expression "& $cmd | out-null"
 	Write-host "Code format done!`n" -f Green
 }
@@ -51,10 +51,10 @@ function cleanProject() {
 }
 
 
-function exportSourcesOnly(){
+function exportCodeOnly([string]$name) {
 	$theDate = Get-Date -Format "MM.dd.yyyy - hh.mm.ss tt"
-	$export_name = "[" + $theDate + "] ARIES II Source.zip"
-	$archiveList = ".\src", ".\vendor", ".\support", ".\.vscode", ".\.clang-format", ".\.gitignore", ".\CMakeLists.txt", ".\clang-build.ps1", ".\justfile", ".\readme.md"
+	$export_name = "[" + $theDate + "] $name.zip"
+	$archiveList = ".\src", ".\docs", ".\vendor", ".\support", ".\.vscode", ".\.clang-format", ".\.gitignore", ".\CMakeLists.txt", ".\clang-build.ps1", ".\justfile", ".\readme.md", ".\dev.bat", ".\nlohmann_json.natvis"
 	$all_files_present = 1;
 	$missingItem = 'None';
 
@@ -73,7 +73,7 @@ function exportSourcesOnly(){
 			#break
 		}
 	}
-	If($all_files_present) {
+	If ($all_files_present) {
 		$compress = @{
 			Path             = $archiveList
 			CompressionLevel = "Fastest"
@@ -81,7 +81,8 @@ function exportSourcesOnly(){
 		}
 		Compress-Archive @compress -Force
 		Write-host "Succesfully exported '$export_name'" -f Green
-	} else {
+	}
+ else {
 		Write-host "Failed to export, '$missingItem' is missing!" -f Red
 	}
 	
@@ -89,10 +90,10 @@ function exportSourcesOnly(){
 	# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.archive/compress-archive?view=powershell-7.3
 }
 
-function exportAll(){
+function exportAll() {
 	$theDate = Get-Date -Format "MM.dd.yyyy - hh.mm.ss tt"
 	$export_name = "[" + $theDate + "] ARIES II Project Data.zip"
-	$archiveList = ".\src", ".\vendor", ".\support",".\bin", ".\.vscode", ".\.clang-format", ".\.gitignore", ".\CMakeLists.txt", ".\clang-build.ps1", ".\justfile", ".\readme.md"
+	$archiveList = ".\src", ".\docs", ".\vendor", ".\support", ".\bin", ".\.vscode", ".\.clang-format", ".\.gitignore", ".\CMakeLists.txt", ".\clang-build.ps1", ".\justfile", ".\readme.md", ".\dev.bat", ".\nlohmann_json.natvis", ".\justfile"
 	$all_files_present = 1
 	$missingItem = 'None'
 
@@ -119,16 +120,36 @@ function exportAll(){
 		}
 		Compress-Archive @compress -Force
 		Write-host "Succesfully exported '$export_name'" -f Green
-	} else {
+	}
+ else {
 		Write-host "Failed to export, '$missingItem' is missing!" -f Red
 	}
 }
 
-function windowsTerminal(){
+function windowsTerminal() {
 	#@%LOCALAPPDATA%\Microsoft\WindowsApps\wt.exe -d %cd%
 	Write-host "Launched windows terminal" -f Green	
 }
 
+function vsWhere() {
+	$vswhereLatest = "https://github.com/Microsoft/vswhere/releases/latest/download/vswhere.exe"
+	$vswherePath = ".\support\vswhere.exe"
+	If (Test-Path $vswherePath) {
+		# Write-host "'$item'" -f Yellow -NoNewline
+		Write-host "vswhere.exe not found" -f Red
+		Write-host "downloading vswhere.exe..." -f Green
+		invoke-webrequest $vswhereLatest -OutFile $vswherePath
+	}
+
+	Write-host "VS location:" -f Blue
+	.\support\vswhere.exe -prerelease -latest -property installationPath
+}
+
+function clangBuild(){
+
+	./clang-build -export-jsondb
+	Write-host "Generated compile_commands.json" -f Green
+}
 # TEST FUNCTIONS
 function Add-Path($Path) {
 	$Path = [Environment]::GetEnvironmentVariable("PATH", "Machine") + [IO.Path]::PathSeparator + $Path
