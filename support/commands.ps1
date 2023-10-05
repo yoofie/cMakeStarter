@@ -159,16 +159,19 @@ function runDev() {
 	$installationPath = .\support\vswhere.exe -prerelease -latest -property installationPath
 	Write-host "Visual Studio Location: $installationPath" -f Green
 	$vcvars64 = "$installationPath" + "\VC\Auxiliary\Build\vcvars64.bat"
+	$vcvars642 = "$installationPath" + "\VC\Auxiliary\Build\"
+	$vccmd = "$installationPath" + "\Common7\Tools\LaunchDevCmd.bat"
 	Write-host "`t vcvars64 path: $vcvars64" -f Green
-	#	if ($installationPath -and (test-path "$installationPath\VC\Auxiliary\Build\vcvars64.bat")) {
-	#  & "${env:COMSPEC}" /s /c "`"$installationPath\VC\Auxiliary\Build\vcvars64.bat`" -no_logo && set" | foreach-object {
-	#			$name, $value = $_ -split '=', 2
-	#			set-content env:\"$name" $value
-	#  }
-	#	}  else {
-	#		Write-host "Runnning... $vcvars64" -f Green
-	#	}
 
+	$thePath = replaceSlashes($pwd)
+	
+	Write-Host "      APPDATA:" + $env:APPDATA
+	Write-Host "LOCAL APPDATA:" + $env:LOCALAPPDATA
+
+	$wtt3 = "wt -d $thePath cmd /k `'$vcvars64'"
+
+	Write-Host "The path: $thePath"
+	Invoke-Expression "& $wtt3"
 }
 
 function stats(){
@@ -177,6 +180,12 @@ function stats(){
 	} else {
 		mkdir bin
 	}
+}
+
+function replaceSlashes([string]$inputVal) {
+	$pattern = '\\'
+	$result = $inputVal -replace $pattern, '/'
+	return $result
 }
 
 # TEST FUNCTIONS

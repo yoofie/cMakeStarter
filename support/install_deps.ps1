@@ -12,9 +12,9 @@ Write-host "Attempting to install Ninja build system..." -f Green
 choco install ninja
 
 Write-host "Attempting to install tokei" -f Green	
-winget install XAMPPRocky.tokei
-cargo install tokei --features all
+choco install tokei
+# winget install XAMPPRocky.tokei
 
 Write-host "You can now run just commands" -f Green	
-cd ..
+Set-Location ..
 just --list
