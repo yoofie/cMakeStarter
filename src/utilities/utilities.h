@@ -1,25 +1,26 @@
 /* **************************************
-	File Name: 
+	File Name:
 	Created: Saturday April 23 2022
 *************************************** */
 #ifndef _UTILS_H_
 #define _UTILS_H_
 
-
 /* **************************************
 	#defines
 *************************************** */
-#define ARRAY_SIZE(x) sizeof(x)/sizeof(x[0])
+#define ARRAY_SIZE(x)										sizeof(x) / sizeof(x[0])
 #define ISOLATE_AND_GET_BITS(var, startPosition, numOfBits) (((var) & (((1u << (numOfBits)) - 1u) << (unsigned)(startPosition))) >> (startPosition))
-
 
 /* **************************************
 	Declarations
 *************************************** */
 /* For variant Overload */
-template <class... Fs> struct Overload : Fs... { using Fs::operator()...; };
-template <class... Fs> Overload(Fs...)->Overload<Fs...>;
-
+template <class... Fs>
+struct Overload : Fs... {
+	using Fs::operator()...;
+};
+template <class... Fs>
+Overload(Fs...) -> Overload<Fs...>;
 
 /* ********************************************************
 	auto y = std::visit(
@@ -36,8 +37,6 @@ template <class... Fs> Overload(Fs...)->Overload<Fs...>;
 /* **************************************
 	Extras
 *************************************** */
-
-
 
 template <typename T>
 inline T RandomRangeX(T min, T max) {

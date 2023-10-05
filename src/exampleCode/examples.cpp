@@ -2,30 +2,27 @@
 	File Name: Examples
 *************************************** */
 
+#include "concurrentqueue.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "concurrentqueue.h"
-//#include "blockingconcurrentqueue.h"
+// #include "blockingconcurrentqueue.h"
 #include "tracy/Tracy.hpp"
 #include "tracy/TracyC.h"
 /* **************************************
 	#defines
 *************************************** */
 
-
 /* **************************************
 	Declarations
 *************************************** */
-
 
 /* **************************************
 	Code
 *************************************** */
 
-
 void concurrentqueue() {
 	moodycamel::ConcurrentQueue<int> q;
-	int dequeued[100] = { 0 };
+	int dequeued[100] = {0};
 	std::thread threads[20];
 
 	// Producers
@@ -34,7 +31,8 @@ void concurrentqueue() {
 			for (int j = 0; j != 10; ++j) {
 				q.enqueue(i * 10 + j);
 			}
-			}, i);
+		},
+								 i);
 	}
 
 	// Consumers
@@ -46,7 +44,7 @@ void concurrentqueue() {
 					++dequeued[item];
 				}
 			}
-			});
+		});
 	}
 
 	// Wait for all threads
@@ -65,4 +63,3 @@ void concurrentqueue() {
 		assert(dequeued[i] == 1);
 	}
 }
-

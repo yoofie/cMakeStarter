@@ -10,7 +10,6 @@
 	#defines
 *************************************** */
 
-
 /* **************************************
 	Declarations
 *************************************** */
@@ -23,6 +22,6 @@ enum class threadCtrl_t {
 /* **************************************
 	Extras
 *************************************** */
-void threadCtrlHandler(copper::buffered_channel<threadCtrl_t>* targetThread, threadCtrl_t cmd, bool & exitThread);
+void threadCtrlHandler(copper::buffered_channel<threadCtrl_t> *targetThread, threadCtrl_t cmd, bool &exitThread);
 
 #endif

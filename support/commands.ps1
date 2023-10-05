@@ -1,5 +1,6 @@
 
 function generate_ninja_makefiles() {
+	Clear-Host # Clear the console
 	Write-host "Generating Ninja build files..." -f Blue
 	$Env:PATH += ";$pwd"
 	$Env:PATH += ";$pwd/support"
@@ -8,15 +9,15 @@ function generate_ninja_makefiles() {
 	# Write-Host "cmd:" $cmd
 	# Write-Host "Env:PATH:" $Env:PATH
 	Invoke-Expression "& $cmd | out-null"
-	Write-host "Generated Ninja build files" -f Green
+	Write-host "Generated Ninja build files`n" -f Green
 }
 
 function fmt() {
+	# Write-Host "InvocationName:" $MyInvocation.InvocationName -f Yellow
+	# Write-Host "Script:" $PSCommandPath -f Yellow
+	# Write-Host "Path:" $PSScriptRoot -f Yellow
+	# Write-Host "PWD:" $pwd -f Yellow
 	Write-host "`n`nRunning code formatter..." -f Blue
-	Write-Host "InvocationName:" $MyInvocation.InvocationName -f Yellow
-	Write-Host "Script:" $PSCommandPath -f Yellow
-	Write-Host "Path:" $PSScriptRoot -f Yellow
-	Write-Host "PWD:" $pwd -f Yellow
 	$Env:PATH += ";$pwd"
 	$Env:PATH += ";$pwd/support"
 	$cmd = (($PSScriptRoot) + "\clang-format-all.ps1 -RepoRoot 'src' -Include '*.h', '*.hpp', '*.cpp' -Exclude '*.g.*'")
@@ -54,7 +55,7 @@ function cleanProject() {
 function exportCodeOnly([string]$name) {
 	$theDate = Get-Date -Format "MM.dd.yyyy - hh.mm.ss tt"
 	$export_name = "[" + $theDate + "] $name.zip"
-	$archiveList = ".\src", ".\docs", ".\vendor", ".\support", ".\.vscode", ".\.clang-format", ".\.gitignore", ".\CMakeLists.txt", ".\clang-build.ps1", ".\justfile", ".\readme.md", ".\dev.bat", ".\nlohmann_json.natvis"
+	$archiveList = ".\src", ".\docs", ".\vendor", ".\support", ".\.vscode", ".\.clang-format", ".\.gitignore", ".\CMakeLists.txt", ".\justfile", ".\readme.md", ".\dev.bat", ".\nlohmann_json.natvis", ".\x64NativeTools.lnk"
 	$all_files_present = 1;
 	$missingItem = 'None';
 
@@ -145,11 +146,29 @@ function vsWhere() {
 	.\support\vswhere.exe -prerelease -latest -property installationPath
 }
 
-function clangBuild(){
+function clangBuild() {
 
-	./clang-build -export-jsondb
+	.\support\clang-build -export-jsondb
 	Write-host "Generated compile_commands.json" -f Green
 }
+
+function runDev() {
+	$installationPath = .\support\vswhere.exe -prerelease -latest -property installationPath
+	Write-host "Visual Studio Location: $installationPath" -f Green
+	$vcvars64 = "$installationPath" + "\VC\Auxiliary\Build\vcvars64.bat"
+	Write-host "`t vcvars64 path: $vcvars64" -f Green
+	#	if ($installationPath -and (test-path "$installationPath\VC\Auxiliary\Build\vcvars64.bat")) {
+	#  & "${env:COMSPEC}" /s /c "`"$installationPath\VC\Auxiliary\Build\vcvars64.bat`" -no_logo && set" | foreach-object {
+	#			$name, $value = $_ -split '=', 2
+	#			set-content env:\"$name" $value
+	#  }
+	#	}  else {
+	#		Write-host "Runnning... $vcvars64" -f Green
+	#	}
+
+}
+
+
 # TEST FUNCTIONS
 function Add-Path($Path) {
 	$Path = [Environment]::GetEnvironmentVariable("PATH", "Machine") + [IO.Path]::PathSeparator + $Path

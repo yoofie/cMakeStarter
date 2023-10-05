@@ -14,8 +14,6 @@
 // BIT2MASK hereby deprecated in favour of higher level bit access functions
 // #define BIT2MASK(bit)     (1u << (bit))
 
-
-
 #define BIT_TO_MASK(bit)		 (1uL << (unsigned)(bit))
 #define BITS_TO_MASK(lsb, count) (((1u << (count)) - 1u) << (unsigned)(lsb)) // MISRAFix 3410
 
@@ -33,7 +31,7 @@
 #define BIT_WRITE(var, bit, val)		  ((var) = ((var) & ~(1u << (unsigned)(bit))) | (((unsigned)(val)&0x1u) << (unsigned)(bit)))
 #define BIT_WRITE_BOOL(var, bit, val)	  BIT_WRITE(var, bit, (val) ? 1u : 0u)
 #define BIT_WRITE_U16(var, bit, val)	  ((var) = (uint16_t)(((unsigned)(var) & ~(1u << (unsigned)(bit))) | (((unsigned)(val)&0x1u) << (unsigned)(bit))))
-#define BIT_WRITE_U8(var, bit, val)		  ((var) = (uint8_t)(((unsigned)(var) & ~(1u << (unsigned)(bit))) | (((unsigned)(val)&0x1u) << (unsigned)(bit)))) 
+#define BIT_WRITE_U8(var, bit, val)		  ((var) = (uint8_t)(((unsigned)(var) & ~(1u << (unsigned)(bit))) | (((unsigned)(val)&0x1u) << (unsigned)(bit))))
 #define BIT_WRITE_BOOL_U16(var, bit, val) BIT_WRITE_U16(var, bit, (val) ? 1u : 0u)
 #define BIT_WRITE_BOOL_U8(var, bit, val)  BIT_WRITE_U8(var, bit, (val) ? 1u : 0u)
 

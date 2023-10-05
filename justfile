@@ -22,14 +22,24 @@ buildr: gen
 	@powershell.exe Write-host "Successfully built project`n`n" -f Green
 
 # Build both release and debug versions of the software
-buildall:
-	@powershell.exe Write-host "Running debug build..." -f Blue
+buildall: gen
+	@powershell.exe Write-host "`nRunning debug build..." -f Blue
 	@ninja -f build-Debug.ninja
-	@powershell.exe Write-host "Running release build..." -f Cyan
+	@powershell.exe Write-host "`nRunning release build..." -f Cyan
 	@ninja -f build-Release.ninja
-	@powershell.exe Write-host "Running release build (with debug info)..." -f Magenta
+	@powershell.exe Write-host "`nRunning release build (with debug info)..." -f Magenta
 	@ninja -f build-RelWithDebInfo.ninja
-	@powershell.exe Write-host "Succesfully built project" -f Green
+	@powershell.exe Write-host "Succesfully built projects" -f Green
+
+# Ninja Metadata that may be useful
+ninja_stuff: gen
+	@powershell.exe Write-host "`nGenerating extra Ninja files in 'bin/ninja_stuff'" -f Cyan
+	@ninja -t deps > bin/ninja_stuff/file_deps.txt
+	@ninja -t inputs > bin/ninja_stuff/inputs.txt
+	@ninja -t commands > bin/ninja_stuff/commands.txt
+	@ninja -t compdb > bin/ninja_stuff/compdb.txt
+	@ninja -t targets > bin/ninja_stuff/targets.txt
+	@powershell.exe Write-host "Done" -f Green
 
 # Launch the MSVC dev console which is needed to build the SW
 console:
@@ -40,13 +50,17 @@ console:
 fmt:
 	@powershell.exe . .\support\commands.ps1; fmt
 
+
 # Clean/delete all generated files & directories
 clean:
 	@powershell.exe . .\support\commands.ps1; cleanProject
 
 clang:
-	powershell.exe ./clang-build -export-jsondb
-	@powershell.exe Write-host "Generated compile_commands.json" -f Green	
+	@powershell.exe . .\support\commands.ps1; clangBuild
+
+# Clean/delete all generated files & directories
+rundev:
+	@powershell.exe . .\support\commands.ps1; runDev
 
 wt:
 	@%LOCALAPPDATA%\Microsoft\WindowsApps\wt.exe -d %cd% cmd '%comspec% /k %%i\Common7\Tools\vsdevcmd.bat %*'

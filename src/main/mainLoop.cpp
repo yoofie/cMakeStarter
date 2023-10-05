@@ -1,9 +1,8 @@
 /* **************************************
 	File Name: Main Loop
 *************************************** */
-#include "globals.h"
 #include "mainLoop.h"
-
+#include "globals.h"
 
 #ifdef TRACY_ENABLE
 #include "tracy/Tracy.hpp"

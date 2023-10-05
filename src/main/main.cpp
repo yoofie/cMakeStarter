@@ -11,10 +11,10 @@
 #include "ring.hpp"
 #include "ring_span.hpp"
 #include "sqlite3.h"
+#include "subprocess.hpp"
 #include "version.h"
 #include <filesystem>
 #include <iostream>
-#include "subprocess.hpp"
 #ifdef TRACY_ENABLE
 #include "tracy/Tracy.hpp"
 #include "tracy/TracyC.h"
@@ -72,7 +72,7 @@ int main(int argc, char **) {
 		std::cout << "Task #1 executes asynchronously\n";
 	});
 	auto task2 = async::spawn(custom_pool, [] {
-		auto appName  = fmt::format("{}.exe", APP_NAME);
+		auto appName = fmt::format("{}.exe", APP_NAME);
 		auto [explorer, length] = subprocess::check_output({"explorer", "/select,", appName});
 		std::this_thread::sleep_for(800ms);
 		std::cout << "Task #2 executes asynchronously\n";

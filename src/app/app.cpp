@@ -17,9 +17,7 @@ appData app;
 /* appData::appData() {}
 appData::~appData() {} */
 void appData::init() {
-	
 }
 
-void appData::reqExit(){
-	
+void appData::reqExit() {
 }
