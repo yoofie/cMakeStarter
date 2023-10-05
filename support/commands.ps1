@@ -89,9 +89,9 @@ function exportCodeOnly([string]$name) {
 	# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.archive/compress-archive?view=powershell-7.3
 }
 
-function exportAll() {
+function exportAll([string]$name) {
 	$theDate = Get-Date -Format "MM.dd.yyyy - hh.mm.ss tt"
-	$export_name = "[" + $theDate + "] ARIES II Project Data.zip"
+	$export_name = "[" + $theDate + "] $name.zip"
 	$archiveList = ".\src", ".\docs", ".\vendor", ".\support", ".\bin", ".\.vscode", ".\.clang-format", ".\.gitignore", ".\CMakeLists.txt", ".\clang-build.ps1", ".\justfile", ".\readme.md", ".\dev.bat", ".\nlohmann_json.natvis", ".\justfile"
 	$all_files_present = 1
 	$missingItem = 'None'
