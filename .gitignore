@@ -18,3 +18,4 @@ CMakeCache.txt
 src/main/version.h
 *.exp
 lib/RelWithDebInfo
+compile_commands.json

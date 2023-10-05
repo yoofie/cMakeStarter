@@ -27,7 +27,7 @@ function fmt() {
 
 function cleanProject() {
 
-	$Directories = "bin", "build", "support/psClang", "psClang", "CMakeFiles", "CMakeCache.txt", "ninja.log", "cmake_install.cmake", ".ninja_log", ".ninja_deps", ".cache", "lib/Release", "lib/Debug", "lib/RelWithDebInfo", "build.ninja", "build-Debug.ninja", "build-Release.ninja", "build-RelWithDebInfo.ninja"
+	$Directories = "bin", "build", "support/psClang", "psClang", "CMakeFiles", "CMakeCache.txt", "ninja.log", "cmake_install.cmake", ".ninja_log", ".ninja_deps", ".cache", "lib/Release", "lib/Debug", "lib/RelWithDebInfo", "build.ninja", "build-Debug.ninja", "build-Release.ninja", "build-RelWithDebInfo.ninja", , "compile_commands.json"
  
 	#Delete files in each directory
 	ForEach ($Dir in $Directories) {
