@@ -1,10 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
-
+# ##################################################################
+# PROJECT STUFF
+# ##################################################################
 project(cMakeStarter)
-
-if(NOT CMAKE_BUILD_TYPE)
-	set(CMAKE_BUILD_TYPE "Debug")
-endif()
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -12,32 +10,32 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
+# Version info that will be compiled into the binaries
+set(MAJOR_VERSION 1)
+set(MINOR_VERSION 0)
+set(PATCH_VERSION 0)
+set(REVISION 0)
+set(RELEASE_VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}.${REVISION})
+include(support/get_dir_list.cmake)
+set(GENERATE_VSCODE_FILES true)
+# ##################################################################
+# BUILD TYPES
+# ##################################################################
+
+include(support/get_dir_list.cmake)
+
+# ##################################################################
+# COMPILE FLAGS & DEFINITIONS
+# ##################################################################
+
+# add_compile_options("/SUBSYSTEM:WINDOWS")
+# add_link_options("/SUBSYSTEM:WINDOWS")
+# add_compile_options("MAP" "/MP4" "/P" "/emittoolversioninfo:no")
 # Can manually add the sources using the set command as follows:
 # set(SOURCES src/mainapp.cpp src/Student.cpp)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD")
 
-# However, the file(GLOB...) allows for wildcard additions:
-file(GLOB_RECURSE SOURCES "src/**.cpp")
-file(GLOB_RECURSE FLDR LIST_DIRECTORIES true "src/**")
-
-# Exclude Filter
-list(FILTER SOURCES EXCLUDE REGEX "${CMAKE_CURRENT_SOURCE_DIR}/Test/.*")
-
-# Add source files.
-file(GLOB_RECURSE SOURCE_FILES
-	${CMAKE_SOURCE_DIR}/src/*.c
-	${CMAKE_SOURCE_DIR}/src/*.cpp)
-
-# Add header files.
-file(GLOB_RECURSE HEADER_FILES
-	${CMAKE_SOURCE_DIR}/src/*.h
-	${CMAKE_SOURCE_DIR}/src/*.hpp)
-
-# "/MP4"
-# add_compile_options("/SUBSYSTEM:WINDOWS")
-# add_link_options("/SUBSYSTEM:WINDOWS")
-# add_compile_options("MAP" "/MP4" "/P" "/emittoolversioninfo:no")
 add_compile_options("/diagnostics:caret")
 add_compile_options("/bigobj")
 add_compile_options("/Zi")
@@ -52,7 +50,25 @@ if(CMAKE_BUILD_TYPE EQUAL "Debug")
 endif()
 
 # add_compile_definitions(DTRACY_ENABLE DTRACY_FIBERS)
-set(bleh GLOB_RECURSE children ${curdir}/vendor/*)
+
+# ##################################################################
+# Sources & Includes
+# ##################################################################
+
+# Add source files.
+file(GLOB_RECURSE SOURCE_FILES
+	${CMAKE_SOURCE_DIR}/src/*.c
+	${CMAKE_SOURCE_DIR}/src/*.cpp)
+
+# Add header files.
+file(GLOB_RECURSE HEADER_FILES
+	${CMAKE_SOURCE_DIR}/src/*.h
+	${CMAKE_SOURCE_DIR}/src/*.hpp)
+
+# Exclude Filter
+list(FILTER SOURCES EXCLUDE REGEX "${CMAKE_CURRENT_SOURCE_DIR}/Test/.*")
+
+get_dir_list(vendor VENDOR_INC_DIRS)
 
 include_directories(vendor/gl3w/GL)
 include_directories(include
@@ -80,8 +96,10 @@ include_directories(include
 	vendor/hashlib
 	vendor/asyncpp
 	vendor/asyncpp/async++
+	#${VENDOR_INC_DIRS}
 )
 
+# Common library enable switches
 set(TRACY_ENABLE false)
 set(DUCKDB_ENABLE false)
 set(SQLITE_ENABLE false)
@@ -106,7 +124,7 @@ set(CMAKE_TOOLCHAIN_FILE "E:/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRIN
 # ######################
 # GENERATE EXE
 # ######################
-add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCES})
+add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY lib)
 
@@ -256,30 +274,6 @@ endif()
 # ######################
 # MACROS
 # ######################
-MACRO(SUBDIRLIST result curdir)
-	FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
-	SET(dirlist "")
-
-	FOREACH(child ${children})
-		IF(IS_DIRECTORY ${curdir}/${child})
-			LIST(APPEND dirlist ${child})
-		ENDIF()
-	ENDFOREACH()
-
-	SET(${result} ${dirlist})
-ENDMACRO()
-
-# SUBDIRLIST(SUBDIRS ${CMAKE_SOURCE_DIR}/vendor)
-#
-# message(bleh = ${SUBDIRS})
-# message(PROJECT_NAME = ${PROJECT_NAME})
-# message(SUBDIRSS = ${SUBDIRS})
-# message(SRC_FOLDERS = ${SRC_FOLDERS})
-# message(FLDR = ${FLDR})
-
-# foreach(i IN LISTS SOURCES)
-# message("${i}")
-# endforeach()
 
 # https://cmake.org/cmake/help/latest/manual/cmake-commands.7.html
 if(MSVC)
@@ -349,13 +343,87 @@ IF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/.git)
 			OUTPUT_VARIABLE "GIT_BUILD_VERSION_TAG"
 			ERROR_QUIET
 			OUTPUT_STRIP_TRAILING_WHITESPACE)
-		MESSAGE(STATUS "Git version: ${GIT_BUILD_VERSION}")
-		MESSAGE(STATUS "Git version tag: ${GIT_BUILD_VERSION_TAG}")
+		EXECUTE_PROCESS(
+			COMMAND ${GIT_EXECUTABLE} branch --show-current
+			WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+			OUTPUT_VARIABLE "GIT_BUILD_BRANCH_NAME"
+			ERROR_QUIET
+			OUTPUT_STRIP_TRAILING_WHITESPACE)
+		if(CMAKE_DEBUG_MESSAGES)
+			MESSAGE(STATUS "Git version: ${GIT_BUILD_VERSION}")
+			MESSAGE(STATUS "Git version tag: ${GIT_BUILD_VERSION_TAG}")
+			MESSAGE(STATUS "Git branch name: ${GIT_BUILD_BRANCH_NAME}")
+		endif()
+		
 	ELSE(GIT_FOUND)
 		SET(GIT_BUILD_VERSION 0)
 		SET(GIT_BUILD_VERSION_TAG 0)
+		SET(GIT_BUILD_BRANCH_NAME "Unknown")
 	ENDIF(GIT_FOUND)
 ENDIF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/.git)
 
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/support/version.h.in ${CMAKE_CURRENT_SOURCE_DIR}/src/main/version.h)
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/support/launch.json.temp ${CMAKE_CURRENT_SOURCE_DIR}/.vscode/launch.json @ONLY)
+# ##################################################################
+# MISC STUFF
+# ##################################################################
+
+# To nicely support folders in IDEs.
+set_property(GLOBAL PROPERTY USE_FOLDERS TRUE)
+
+# ##################################################################
+# DEBUG VARS & PRETTY PRINTING
+# ##################################################################
+#get_cmake_property(_variableNames VARIABLES)
+list (SORT _variableNames)
+foreach (_variableName ${_variableNames})
+    message(STATUS "${_variableName}=${${_variableName}}")
+endforeach()
+
+# Print COMPILE_DEFINITIONS
+get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
+
+# Make the following human readable
+string(REGEX REPLACE ";" ";\n\t" COMPILER_DEFINITONS_PRINT "${DirDefs}")
+string(REGEX REPLACE ";" ";\n\t" SOURCE_FILES_PRINT "${SOURCE_FILES}")
+string(REGEX REPLACE ";" ";\n\t" HEADER_FILES_PRINT "${HEADER_FILES}")
+string(REGEX REPLACE ";" ";\n\t" VENDOR_INC_DIRS_PRINT "${VENDOR_INC_DIRS}")
+
+# https://stackoverflow.com/questions/64667503/how-to-save-the-build-time-of-a-c-dll
+string(TIMESTAMP _TIMESTAMP "%Y-%m-%dT%H:%M:%S")
+string(TIMESTAMP _PRETTY_TIMESTAMP "%Y-%m-%d : %H:%M:%S")
+message("Building v${RELEASE_VERSION}")
+
+# ##################################################################
+# GENERATED FILES & TEMPLATES
+# ##################################################################
+find_program(POWERSHELL_PATH NAMES powershell)
+
+EXECUTE_PROCESS(
+			COMMAND ${POWERSHELL_PATH} "Write-host $Env:UserDomain"
+			WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+			OUTPUT_VARIABLE "BUILDER_USER_DOMAIN"
+			ERROR_QUIET
+			OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+EXECUTE_PROCESS(
+			COMMAND ${POWERSHELL_PATH} "[System.Security.Principal.WindowsIdentity]::GetCurrent().Name"
+			WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+			OUTPUT_VARIABLE "BUILDER_USER_COMPUTER_NAME"
+			ERROR_QUIET
+			OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+# Generate version info file that can be used inside the SW
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/support/version.h.in ${CMAKE_CURRENT_SOURCE_DIR}/src/version.h)
+
+if(GENERATE_VSCODE_FILES)
+	# VS Code Only: Generate a launch.json file
+	CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/support/vscode/launch.json.temp ${CMAKE_CURRENT_SOURCE_DIR}/.vscode/launch.json @ONLY)
+	CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/support/vscode/vscode_settings.json.temp ${CMAKE_CURRENT_SOURCE_DIR}/.vscode/settings.json)
+	CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/support/vscode/vscode_tasks.json.temp ${CMAKE_CURRENT_SOURCE_DIR}/.vscode/tasks.json)
+endif(GENERATE_VSCODE_FILES)
+
+# #################################
+# Extra Dirs
+# #################################
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin/ninja_stuff)
+#file(GENERATE OUTPUT blahhh.txt CONTENT $<CONFIG:Release>)
+#add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E echo "THE BUILD TYPE = $<$<CONFIG:Release>:FBL_RELEASE>")
