@@ -50,7 +50,6 @@ console:
 fmt:
 	@powershell.exe . .\support\commands.ps1; fmt
 
-
 # Clean/delete all generated files & directories
 clean:
 	@powershell.exe . .\support\commands.ps1; cleanProject
@@ -62,19 +61,26 @@ clang:
 rundev:
 	@powershell.exe . .\support\commands.ps1; runDev
 
+# Open the newer Windows Terminal 
 wt:
 	@%LOCALAPPDATA%\Microsoft\WindowsApps\wt.exe -d %cd% cmd '%comspec% /k %%i\Common7\Tools\vsdevcmd.bat %*'
 	@powershell.exe Write-host "Launched windows terminal" -f Green	
 
+# Locate Visual Studio Dev environment on your system
 vswhere:
 	@powershell.exe . .\support\commands.ps1; vsWhere
 
+# Export the project source code to a zip file
 export:
 	@powershell.exe . .\support\commands.ps1; exportCodeOnly cMakeStarter
 
+# Calculate stats about your code
 stats:
-	@powershell.exe Write-host "Code stats for ./src" -f Green	
+	@powershell.exe Write-host "Code stats for ./src" -f Blue
+	@powershell.exe . .\support\commands.ps1; stats
+	@tokei .\src --files > bin\code_stats.txt
 	@tokei .\src --files
+	@powershell.exe Write-host "Code stats data generated: 'bin\code_stats.txt'" -f Green
 ## tokei .\src --files --output json > code_stats.json
 
 # Alternative names for the commands above

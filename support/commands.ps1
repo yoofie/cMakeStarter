@@ -26,7 +26,8 @@ function fmt() {
 }
 
 function cleanProject() {
-	$Directories = "bin", "build", "support/psClang", "psClang", "CMakeFiles", "CMakeCache.txt", "ninja.log", "cmake_install.cmake", ".ninja_log", ".ninja_deps", ".cache", "lib", "build.ninja", "build-Debug.ninja", "build-Release.ninja", "build-RelWithDebInfo.ninja"
+
+	$Directories = "bin", "build", "support/psClang", "psClang", "CMakeFiles", "CMakeCache.txt", "ninja.log", "cmake_install.cmake", ".ninja_log", ".ninja_deps", ".cache", "lib/Release", "lib/Debug", "lib/RelWithDebInfo", "build.ninja", "build-Debug.ninja", "build-Release.ninja", "build-RelWithDebInfo.ninja"
  
 	#Delete files in each directory
 	ForEach ($Dir in $Directories) {
@@ -43,10 +44,12 @@ function cleanProject() {
 		}
 	}
 	
-	#Get-ChildItem *.sln | foreach { Remove-Item -Path $_.FullName }
-	#Get-ChildItem *.vcxproj | foreach { Remove-Item -Path $_.FullName }
-	#Get-ChildItem *.filters | foreach { Remove-Item -Path $_.FullName }
-	#Get-ChildItem lib\*.lib | foreach { Remove-Item -Path $_.FullName }
+	Get-ChildItem *.sln | ForEach-Object { Remove-Item -Path $_.FullName }
+	Get-ChildItem *.vcxproj | ForEach-Object { Remove-Item -Path $_.FullName }
+	Get-ChildItem *.filters | ForEach-Object { Remove-Item -Path $_.FullName }
+	If (Test-Path '.\lib') {
+		Get-ChildItem lib\*.lib | ForEach-Object { Remove-Item -Path $_.FullName }
+	}
 	Write-host "Succesfully cleaned" -f Green
 
 }
@@ -168,6 +171,13 @@ function runDev() {
 
 }
 
+function stats(){
+	If (Test-Path '.\bin') {
+		
+	} else {
+		mkdir bin
+	}
+}
 
 # TEST FUNCTIONS
 function Add-Path($Path) {
