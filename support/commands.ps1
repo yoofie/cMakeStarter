@@ -92,33 +92,15 @@ function exportCodeOnly([string]$name) {
 function exportAll([string]$name) {
 	$theDate = Get-Date -Format "MM.dd.yyyy - hh.mm.ss tt"
 	$export_name = "[" + $theDate + "] $name.zip"
-	$archiveList = ".\src", ".\docs", ".\vendor", ".\support", ".\bin", ".\.vscode", ".\.clang-format", ".\.gitignore", ".\CMakeLists.txt", ".\clang-build.ps1", ".\justfile", ".\readme.md", ".\dev.bat", ".\nlohmann_json.natvis", ".\justfile"
-	$all_files_present = 1
-	$missingItem = 'None'
 
-	# Ensure neccessary files/folders are present
-	ForEach ($item in $archiveList) {
-		If (!(Test-Path $item)) {
-			Write-host "'$item'" -f Yellow -NoNewline
-			Write-host " is missing!" -f Red
-			$missingItem = $item
-			$all_files_present = false
-			break
-		}
+	$compress = @{
+		Path             = ".\"
+		CompressionLevel = "Fastest"
+		DestinationPath  = $export_name
 	}
-
-	if ($all_files_present) {
-		$compress = @{
-			Path             = $archiveList
-			CompressionLevel = "Fastest"
-			DestinationPath  = $export_name
-		}
-		Compress-Archive @compress -Force
-		Write-host "Succesfully exported '$export_name'" -f Green
-	}
- else {
-		Write-host "Failed to export, '$missingItem' is missing!" -f Red
-	}
+	Compress-Archive @compress -Force
+	Write-host "Succesfully exported '$export_name'" -f Green
+	
 }
 
 function windowsTerminal() {
@@ -164,10 +146,11 @@ function runDev() {
 	Invoke-Expression "& $wtt3"
 }
 
-function stats(){
+function stats() {
 	If (Test-Path '.\bin') {
 		
-	} else {
+	}
+ else {
 		mkdir bin
 	}
 }
