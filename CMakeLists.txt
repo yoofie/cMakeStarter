@@ -84,7 +84,6 @@ include_directories(include
 	vendor/copper
 	vendor/spdlog
 	vendor/implot
-	vendor/spdlog
 	vendor/tracy
 	vendor/magic_enum
 	vendor/imnodes

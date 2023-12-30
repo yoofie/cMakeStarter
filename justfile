@@ -1,17 +1,17 @@
-### JUSTFILE - PROJECT SPECIFIC COMMANDS ###########################
-# Written by: @y00fie (http://yoofie.net)
+### JUSTFILE - PROJECT SPECIFIC COMMANDS ##############################
+# Written by: @y00fie (http://yoofie.net // https://github.com/yoofie)
 
 # Justfile - https://github.com/casey/just
-### SHELL ##########################################################
+### SHELL #############################################################
 set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
 #set windows-shell := ["cmd.exe", "/c"]
 
 
-### SETTINGS ######################################################
+### SETTINGS #########################################################
 APP_NAME := "host_serial_csv"
 
 
-### COMMANDS ######################################################
+### COMMANDS #########################################################
 # Generates Ninja files only
 gen: 
 	@. .\support\commands.ps1; generate_ninja_makefiles

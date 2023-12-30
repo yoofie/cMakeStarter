@@ -14,7 +14,7 @@ choco install ninja
 Write-host "Attempting to install tokei" -f Green	
 choco install tokei
 # winget install XAMPPRocky.tokei
-
+refreshenv
 Write-host "You can now run just commands" -f Green	
 Set-Location ..
 just --list
