@@ -69,6 +69,7 @@ file(GLOB_RECURSE HEADER_FILES
 list(FILTER SOURCE_FILES EXCLUDE REGEX "${CMAKE_CURRENT_SOURCE_DIR}/Test/.*")
 
 get_dir_list(vendor VENDOR_INC_DIRS)
+get_dir_list(src SRC_INC_DIRS)
 
 include_directories(vendor/gl3w/GL)
 include_directories(include
@@ -95,6 +96,10 @@ include_directories(include
 	vendor/hashlib
 	vendor/asyncpp
 	vendor/asyncpp/async++
+	
+	#src
+	#${SRC_INC_DIRS}
+	#vendor
 	#${VENDOR_INC_DIRS}
 )
 

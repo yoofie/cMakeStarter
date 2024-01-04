@@ -1,6 +1,6 @@
 /* **************************************
 	File Name: Generated version Info
-	File Generated: 2023-11-26 : 22:21:26
+	File Generated: 2024-01-03 : 21:37:58
 *************************************** */
 #ifndef _VERSION_INFO_H_
 #define _VERSION_INFO_H_
@@ -24,8 +24,8 @@
 #define REVISION 0
 
 /* Git Tags */
-#define GIT_BUILD_VERSION 08715db
-#define GIT_BUILD_VERSION_TAG "08715db"
+#define GIT_BUILD_VERSION ea09806
+#define GIT_BUILD_VERSION_TAG "ea09806"
 #define GIT_BUILD_BRANCH_NAME "Updated_cmake"
 
 #define ARCH Windows-10.0.19044
